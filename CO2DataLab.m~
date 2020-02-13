@@ -38,9 +38,6 @@ for i = 1:length(PCO2)
     
     then PCO2_grid(1,i,1) = CO2data(i,1) 
     
-    %when a numnber in the CO2 data matches the CO2 number in the CO2 data
-    %then the function needs to map the lat long and month that corresponds
-    %to that values location in the 3D matrix 
     
     row = CO2data(i); 
     lat = row(1); 
