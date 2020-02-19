@@ -32,15 +32,6 @@ SST_grid = NaN([length(longrid), length(latgrid), length(monthgrid)]);
 PCO2 = CO2data.PCO2_SW;
 %SST = CO2data.SST; 
 
-for i = 1:length(monthgrid)
-        
-    
-PCO2_grid(length(longrid),length(latgrid), i) = reshape(PCO2(:,:,i))
-        
-end 
-        
-%%
-    
     
     %when a numnber in the CO2 data matches the CO2 number in the CO2 data
     %then the function needs to map the lat long and month that corresponds
@@ -50,29 +41,71 @@ end
     lat = CO2data.LAT; 
     long = CO2data.LON; 
     month = CO2data.MONTH; 
-   
     
-    for i = 1:length(monthgrid)
+for i = 1:length(monthgrid)
+    
+    I = find(month == i);
+    
+    for j = 1:length(latgrid)
+        if lat(I) == latgrid(j)   
+        J = find(lat(I) == latgrid(j))
+        
+    end
+    
+    for k = 1:length(longrid)
+        
+      if long(J) == longrid(k)
+        K =find(long(J) == longrid(k))
+      
+      end
+ 
+        end
+    end
+    
+end
+    
+
+    
+    
+    
+
+  
+    
+    
+    
+ %%
+ 
+ 
+    
+for i = 1:length(monthgrid)
         if month == monthgrid(i) 
-            break
-            break
-       
-        j = 1:length(latgrid)
-        if lat ==latgrid(j)
-        break 
+        break
         break
         
-        for k = 1:length(longrid)
+    for j = 1:length(latgrid)
+        if lat ==latgrid(j)
+        break
+        break
+        
+    for k = 1:length(longrid)
         if long ==longrid(k)
-        break 
-        break 
+            
+        break
+        break
         
         
-        end        
+           
         end 
-        end  
+    end
+        end 
         end
-        end
+    end
+   
+end
+
+  
+        
+       
     
      
     
