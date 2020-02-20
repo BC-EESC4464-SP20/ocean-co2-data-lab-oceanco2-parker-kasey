@@ -30,87 +30,35 @@ SST_grid = NaN([length(longrid), length(latgrid), length(monthgrid)]);
 %data and reshape it into your new 3-dimensional arrays
 
 PCO2 = CO2data.PCO2_SW;
-%SST = CO2data.SST; 
+
 
     
-    %when a numnber in the CO2 data matches the CO2 number in the CO2 data
-    %then the function needs to map the lat long and month that corresponds
-    %to that values location in the 3D matrix 
+for i = 1:length(PCO2)
     
-     
-    lat = CO2data.LAT; 
-    long = CO2data.LON; 
-    month = CO2data.MONTH; 
+    lo = find(longrid == CO2data.LON(i)); 
     
-for i = 1:length(monthgrid)
+    la = find(latgrid == CO2data.LAT(i));
     
-    I = find(month == i);
-    
-    for j = 1:length(latgrid)
-        if lat(I) == latgrid(j)   
-        J = find(lat(I) == latgrid(j))
-        
-    end
-    
-    for k = 1:length(longrid)
-        
-      if long(J) == longrid(k)
-        K =find(long(J) == longrid(k))
-      
-      end
- 
-        end
-    end
-    
-end
-    
+    m = find(monthgrid == CO2data.MONTH(i));
 
-    
-    
-    
-
-  
-    
-    
-    
- %%
- 
- 
-    
-for i = 1:length(monthgrid)
-        if month == monthgrid(i) 
-        break
-        break
-        
-    for j = 1:length(latgrid)
-        if lat ==latgrid(j)
-        break
-        break
-        
-    for k = 1:length(longrid)
-        if long ==longrid(k)
-            
-        break
-        break
-        
-        
-           
-        end 
-    end
-        end 
-        end
-    end
-   
+    PCO2_grid(lo,la,m) = PCO2(i);
 end
 
-  
-        
-       
-    
-     
-    
+ SST = CO2data.SST;    
 
+ for i = 1:length(SST)
+    
+    lo = find(longrid == CO2data.LON(i)); 
+    
+    la = find(latgrid == CO2data.LAT(i));
+    
+    m = find(monthgrid == CO2data.MONTH(i));
 
+    SST_grid(lo,la,m) = SST(i);
+end
+ 
+    
+ 
 %% 3a. Make a quick plot to check that your reshaped data looks reasonable
 %Use the imagesc plotting function, which will show a different color for
 %each grid cell in your map. Since you can't plot all months at once, you
@@ -126,7 +74,7 @@ end
 
 figure(1); clf
 worldmap world
-contourfm(latgrid, longrid, SST(:,:,1)','linecolor','none');
+contourfm(latgrid, longrid, SST_grid(:,:,1)','linecolor','none');
 colorbar
 geoshow('landareas.shp','FaceColor','black')
 title('January Sea Surface Temperature (^oC)')
