@@ -41,53 +41,24 @@ for i = 1:length(PCO2)
     
     m = find(monthgrid == CO2data.MONTH(i));
 
-    PCO2_grid(lo,la,m) = PCO2(i)
-end
-    
-    
-
-  
-    
-    
-    
- %%
- 
- 
-    
-for i = 1:length(monthgrid)
-        if month == monthgrid(i) 
-        break
-        break
-        
-    for j = 1:length(latgrid)
-        if lat ==latgrid(j)
-        break
-        break
-        
-    for k = 1:length(longrid)
-        if long ==longrid(k)
-            
-        break
-        break
-        
-        
-           
-        end 
-    end
-        end 
-        end
-    end
-   
+    PCO2_grid(lo,la,m) = PCO2(i);
 end
 
-  
-        
-       
-    
-     
-    
+ SST = CO2data.SST;    
 
+ for i = 1:length(SST)
+    
+    lo = find(longrid == CO2data.LON(i)); 
+    
+    la = find(latgrid == CO2data.LAT(i));
+    
+    m = find(monthgrid == CO2data.MONTH(i));
 
+    SST_grid(lo,la,m) = SST(i);
+end
+ 
+    
+ 
 %% 3a. Make a quick plot to check that your reshaped data looks reasonable
 %Use the imagesc plotting function, which will show a different color for
 %each grid cell in your map. Since you can't plot all months at once, you
@@ -103,7 +74,7 @@ end
 
 figure(1); clf
 worldmap world
-contourfm(latgrid, longrid, SST(:,:,1)','linecolor','none');
+contourfm(latgrid, longrid, SST_grid(:,:,1)','linecolor','none');
 colorbar
 geoshow('landareas.shp','FaceColor','black')
 title('January Sea Surface Temperature (^oC)')
@@ -113,7 +84,12 @@ title('January Sea Surface Temperature (^oC)')
 %whether you can modify features of this map such as the contouring
 %interval, color of the contour lines, labels, etc.
 
-%<--
+figure(2); clf
+worldmap world
+contourfm(latgrid, longrid, PCO2_grid(:,:,12)','linecolor','none');
+colorbar
+geoshow('landareas.shp','FaceColor','black')
+title('December Sea Surface Temperature (^oC)')
 
 %% 4. Calculate and plot a global map of annual mean pCO2
 %<--
