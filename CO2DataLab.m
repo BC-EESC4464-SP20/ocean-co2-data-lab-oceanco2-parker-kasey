@@ -64,7 +64,11 @@ end
 %each grid cell in your map. Since you can't plot all months at once, you
 %will have to pick one at a time to check - i.e. this example is just for
 %January
+figure(1);clf 
+imagesc(latgrid,longrid, SST_grid(:,:,1)');
+colorbar
 
+title('January Sea Surface Temperature (^oC)')
 
 
 %% 3b. Now pretty global maps of one month of each of SST and pCO2 data.
@@ -72,7 +76,7 @@ end
 %(though you may need to make modifications based on differences in how you
 %set up or named your variables above).
 
-figure(1); clf
+figure(2); clf
 worldmap world
 contourfm(latgrid, longrid, SST_grid(:,:,1)','linecolor','none');
 colorbar
@@ -84,7 +88,7 @@ title('January Sea Surface Temperature (^oC)')
 %whether you can modify features of this map such as the contouring
 %interval, color of the contour lines, labels, etc.
 
-figure(2); clf
+figure(3); clf
 worldmap world
 contourfm(latgrid, longrid, PCO2_grid(:,:,12)','linecolor','none');
 colorbar
@@ -94,17 +98,83 @@ title('December pCO2 of Seawater (\muatm)')
 %% 4. Calculate and plot a global map of annual mean pCO2
 %<--
 
+Annual_mean_CO2W=nanmean(PCO2_grid,3);
+
+figure(4); clf
+worldmap world
+contourfm(latgrid, longrid, Annual_mean_CO2W','linecolor','none');
+colorbar
+geoshow('landareas.shp','FaceColor','black')
+title('Annual Mean pCO2 of Seawater (\muatm)')
+
 %% 5. Calculate and plot a global map of the difference between the annual mean seawater and atmosphere pCO2
 %<--
+PCO2_grid_atmo = NaN([length(longrid), length(latgrid), length(monthgrid)]);
+
+PCO2_atm = CO2data.PCO2_AIR;
+
+
+    
+for i = 1:length(PCO2_atm)
+    
+    lo = find(longrid == CO2data.LON(i)); 
+    
+    la = find(latgrid == CO2data.LAT(i));
+    
+    m = find(monthgrid == CO2data.MONTH(i));
+
+    PCO2_grid_atmo(lo,la,m) = PCO2_atm(i);
+end
+
+Annual_mean_CO2A=nanmean(PCO2_grid_atmo,3);
+
+
+
+%seawater minus the atmosphere
+
+
+CO2_mean_differ = Annual_mean_CO2W - Annual_mean_CO2A;
+
+figure(5); clf
+worldmap world
+contourfm(latgrid, longrid, CO2_mean_differ','linecolor','none');
+colorbar
+geoshow('landareas.shp','FaceColor','black')
+title('Annual Mean Difference pCO2 of Seawater and Air (\muatm)')
+
 
 %% 6. Calculate relative roles of temperature and of biology/physics in controlling seasonal cycle
 %<--
+Annual_mean_SST=nanmean(SST_grid,3);
+
+repAMS = repmat(Annual_mean_SST,1,1,12); 
+
+PCO2_BP = PCO2_grid.*exp(0.0423.*(repAMS-SST_grid));
+
+repAMC = repmat(Annual_mean_CO2W,1,1,12);
+
+PCO2_T = repAMC.*exp(0.0423.*(SST_grid-repAMS));
 
 %% 7. Pull out and plot the seasonal cycle data from stations of interest
 %Do for BATS, Station P, and Ross Sea (note that Ross Sea is along a
 %section of 14 degrees longitude - I picked the middle point)
 
 %<--
+%location of BATS station data
+Bat_lat = find(latgrid == 32)
+[val,Bat_lon] = min(abs(longrid-64));
+
+%location of Ocean Station Papa
+
+[val,OSP_lat] = min(abs(latgrid-50));
+[val,OSP_lon] = min(abs(longrid-145));
+
+% Ross Sea Station 
+
+[val,RSS_lat] = min(abs(latgrid-76.5));
+[val,RSS_lon] = min(abs(longrid-173)); 
+
+
 
 %% 8. Reproduce your own versions of the maps in figures 7-9 in Takahashi et al. 2002
 % But please use better colormaps!!!
@@ -112,3 +182,5 @@ title('December pCO2 of Seawater (\muatm)')
 % seasonal cycle above
 
 %<--
+
+
