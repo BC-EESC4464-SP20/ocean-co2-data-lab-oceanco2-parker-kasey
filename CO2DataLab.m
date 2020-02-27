@@ -161,20 +161,41 @@ PCO2_T = repAMC.*exp(0.0423.*(SST_grid-repAMS));
 
 %<--
 %location of BATS station data
-Bat_lat = find(latgrid == 32)
-[val,Bat_lon] = min(abs(longrid-64));
+Bat_lat = find(latgrid == 32);
+[~,Bat_lon] = min(abs(longrid-64));
+ 
+BATSBP_season=squeeze(PCO2_BP(Bat_lat,Bat_lon,:));
+BATST_season = squeeze(PCO2_T(Bat_lat,Bat_lon,:));
+% The station nearest to the location has all NaN values, not sure how to
+% adjust for that 
+
 
 %location of Ocean Station Papa
 
-[val,OSP_lat] = min(abs(latgrid-50));
-[val,OSP_lon] = min(abs(longrid-145));
+[~,OSP_lat] = min(abs(latgrid-50));
+[~,OSP_lon] = min(abs(longrid-145));
 
+OSPBP_season=squeeze(PCO2_BP(OSP_lat,OSP_lon,:));
+OSPT_season = squeeze(PCO2_T(OSP_lat,OSP_lon,:));
+
+figure(6) 
+
+plot(monthgrid,OSPBP_season,'o-')
+hold on 
+plot(monthgrid, OSPT_season,'o-')
 % Ross Sea Station 
 
-[val,RSS_lat] = min(abs(latgrid-76.5));
-[val,RSS_lon] = min(abs(longrid-173)); 
+[~,RSS_lat] = min(abs(latgrid-76.5));
+[~,RSS_lon] = min(abs(longrid-173)); 
 
+RSSBP_season=squeeze(PCO2_BP(RSS_lat,RSS_lon,:));
+RSST_season = squeeze(PCO2_T(RSS_lat,RSS_lon,:));
 
+figure(7) 
+
+plot(monthgrid,RSSBP_season,'o-')
+hold on 
+plot(monthgrid, RSST_season,'o-')
 
 %% 8. Reproduce your own versions of the maps in figures 7-9 in Takahashi et al. 2002
 % But please use better colormaps!!!

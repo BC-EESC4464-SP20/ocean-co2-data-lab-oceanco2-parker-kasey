@@ -161,18 +161,28 @@ PCO2_T = repAMC.*exp(0.0423.*(SST_grid-repAMS));
 
 %<--
 %location of BATS station data
-Bat_lat = find(latgrid == 32)
-[val,Bat_lon] = min(abs(longrid-64));
-
+Bat_lat = find(latgrid == 32);
+[~,Bat_lon] = min(abs(longrid-64));
+ 
+BATSBP_season=squeeze(PCO2_BP(Bat_lat,Bat_lon,:));
+BATST_season = squeeze(PCO2_T(Bat_lat,Bat_lon,:));
 %location of Ocean Station Papa
 
-[val,OSP_lat] = min(abs(latgrid-50);
-[val,OSP_lon] = min(abs(longrid-145);
+[~,OSP_lat] = min(abs(latgrid-50));
+[~,OSP_lon] = min(abs(longrid-145));
+
+OSPBP_season=squeeze(PCO2_BP(OSP_lat,OSP_lon,:));
+OSPT_season = squeeze(PCO2_T(OSP_lat,OSP_lon,:));
+
+figure(6) 
+
+scatter(OSPBP_season)
+hold on 
 
 % Ross Sea Station 
 
-[val,RSS_lat] = min(abs(latgrid-76.5);
-[val,RSS_lon] = min(abs(longrid-173); 
+[~,RSS_lat] = min(abs(latgrid-76.5));
+[~,RSS_lon] = min(abs(longrid-173)); 
 
 
 
