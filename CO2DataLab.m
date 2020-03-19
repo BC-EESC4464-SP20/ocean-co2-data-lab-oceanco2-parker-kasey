@@ -153,7 +153,7 @@ PCO2_T = repAMC.*exp(0.0423.*(SST_grid-repAMS));
 %Do for BATS, Station P, and Ross Sea (note that Ross Sea is along a
 %section of 14 degrees longitude - I picked the middle point)
 
-sitelat = [32.83 50 -76.5];
+sitelat = [32.83 50' -76.5];
 sitelon = [295.17 215 176];
 
 latindex = [];
@@ -262,6 +262,35 @@ end
 
 %<--
 
+for i = 1:length(longrid)
+    for j = 1:length(latgrid)
+        CO2_BP_A(i,j) = max(PCO2_BP(i,j,:)) - min(PCO2_BP(i,j,:));
+        CO2_T_A(i,j) = max(PCO2_T(i,j,:)) - min(PCO2_T(i,j,:));
+        CO2_A_diff(i,j) = CO2_T_A(i,j) / CO2_BP_A(i,j);
+    end
+end
 
+figure
+worldmap world
+contourfm(latgrid, longrid, CO2_BP_A','linecolor','none');
+colorbar
+geoshow('landareas.shp','FaceColor','black')
+title('Seasonal Amp BP Effect (\muatm)')
 
+figure
+worldmap world
+contourfm(latgrid, longrid, CO2_T_A','linecolor','none');
+colorbar
+geoshow('landareas.shp','FaceColor','black')
+title('Seasonal Amp T Effect (\muatm)')
+
+figure
+worldmap world
+contourfm(latgrid, longrid, CO2_A_diff','linecolor','none');
+cmocean('balance','pivot',1)
+colorbar
+geoshow('landareas.shp','FaceColor','black')
+title('Seasonal Diff Effect (\muatm)')
+hold on
+scatterm(sitelat,sitelon,25,'filled')
 
