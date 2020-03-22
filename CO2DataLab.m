@@ -12,7 +12,7 @@ readtable LDEO_GriddedCO2_month_flux_2006c.csv;
 %% 2a. Create new 3-dimensional arrays to hold reshaped data
 %Find each unique longitude, latitude, and month value that will define
 %your 3-dimensional grid
-CO2data=ans;
+CO2data = ans;
 longrid = unique(CO2data.LON); 
 latgrid = unique(CO2data.LAT);
 monthgrid = unique (CO2data.MONTH);
@@ -79,7 +79,7 @@ title('January Sea Surface Temperature (^oC)')
 figure
 worldmap world
 contourfm(latgrid, longrid, SST_grid(:,:,1)','linecolor','none');
-colorbar
+colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
 title('January Sea Surface Temperature (^oC)')
 
@@ -93,7 +93,7 @@ title('January Sea Surface Temperature (^oC)')
 figure
 worldmap world
 contourfm(latgrid, longrid, PCO2_grid(:,:,12)','linecolor','none');
-colorbar
+colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
 title('December pCO2 of Seawater (\muatm)')
 
@@ -105,7 +105,7 @@ Annual_mean_CO2W=nanmean (PCO2_grid,3);
 figure
 worldmap world
 contourfm(latgrid, longrid, Annual_mean_CO2W','linecolor','none');
-colorbar
+colorbar('southoutside');
 geoshow('landareas.shp','FaceColor','black')
 title('Annual Mean pCO2 of Seawater (\muatm)')
 
@@ -126,10 +126,9 @@ figure
 worldmap world
 contourfm(latgrid, longrid, CO2_mean_differ','linecolor','none');
 cmocean('balance','zero')
-colorbar
+h = colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
 title('Annual Mean Difference pCO2 of Seawater and Air (\muatm)')
-
 
 %% 6. Calculate relative roles of temperature and of biology/physics in controlling seasonal cycle
 %<--
@@ -142,11 +141,6 @@ PCO2_BP = PCO2_grid.*exp(0.0423.*(repAMS-SST_grid));
 repAMC = repmat(Annual_mean_CO2W,1,1,12);
 
 PCO2_T = repAMC.*exp(0.0423.*(SST_grid-repAMS));
-
-%%
-
-
-
 
 
 %% 7. Pull out and plot the seasonal cycle data from stations of interest
@@ -198,44 +192,6 @@ gridcoors(i,:) = [latgrid(latindex(i)) longrid(lonindex(i))];
 end
 
 
-% %<--
-% %location of BATS station data
-% Bat_lat = find(latgrid == 32);
-% [~,Bat_lon] = min(abs(longrid-64));
-%  
-% BATSBP_season=squeeze(PCO2_BP(Bat_lat,Bat_lon,:));
-% BATST_season = squeeze(PCO2_T(Bat_lat,Bat_lon,:));
-% % The station nearest to the location has all NaN values, not sure how to
-% % adjust for that 
-% 
-% 
-% %location of Ocean Station Papa
-% 
-% [~,OSP_lat] = min(abs(latgrid-50));
-% [~,OSP_lon] = min(abs(longrid-145));
-% 
-% OSPBP_season=squeeze(PCO2_BP(OSP_lat,OSP_lon,:));
-% OSPT_season = squeeze(PCO2_T(OSP_lat,OSP_lon,:));
-% 
-% figure
-% plot(monthgrid,OSPBP_season,'o-')
-% hold on 
-% plot(monthgrid, OSPT_season,'o-')
-% 
-% hold off
-% 
-% % Ross Sea Station 
-% 
-% [~,RSS_lat] = min(abs(latgrid-76.5));
-% [~,RSS_lon] = min(abs(longrid-173)); 
-% 
-% RSSBP_season=squeeze(PCO2_BP(RSS_lat,RSS_lon,:));
-% RSST_season = squeeze(PCO2_T(RSS_lat,RSS_lon,:));
-% 
-% figure
-% plot(monthgrid,RSSBP_season,'o-')
-% hold on 
-% plot(monthgrid, RSST_season,'o-')
 
 for i = 1:3
     iSST_O = squeeze(SST_grid(lonindex(i),latindex(i),:));
@@ -244,14 +200,26 @@ for i = 1:3
     iPCO2_T = squeeze(PCO2_T(lonindex(i),latindex(i),:));
     figure
     subplot(3,1,1)
-    plot(iSST_O)
+    plot(iSST_O,'k')
+    xlim ([1 12])
+    ylabel('\muatm')
+    title('Sea Surface Temperature')
     subplot(3,1,2)
-plot(iPCO2_O)
-
+    plot(iPCO2_O, 'k')
+    xlim ([1 12])
+    ylabel('^oC')
+    title('pCO2 of Seawater')
+    xlim ([1 12])
 subplot(3,1,3)
-plot(iPCO2_BP)
+plot(iPCO2_BP,'g')
+xlim ([1 12])
 hold on
-plot(iPCO2_T);
+plot(iPCO2_T,'b');
+xlim ([1 12])
+xlabel('Months')
+ylabel('Seawater pCO2 (\muatm)')
+title('The Temperature and Bio-phsyical Effects on Seawater pCO2') 
+legend('Bio-physical Effect','Temperature Effect')
 hold off
 end
     
@@ -270,27 +238,38 @@ for i = 1:length(longrid)
     end
 end
 
+%figure 7 in paper 
 figure
 worldmap world
 contourfm(latgrid, longrid, CO2_BP_A','linecolor','none');
-colorbar
+h = colorbar('southoutside');
 geoshow('landareas.shp','FaceColor','black')
-title('Seasonal Amp BP Effect (\muatm)')
+title('The Seasonal Biological Drawdown of Seawater pCO2')
+xlabel(h,'pCO2 Drawdown (\muatm)','FontSize',14,'FontWeight','bold')
+hold on
+scatterm(sitelat,sitelon,40,'m','filled')
 
+%%
+%Figure 8 in paper
 figure
 worldmap world
 contourfm(latgrid, longrid, CO2_T_A','linecolor','none');
-colorbar
+h=colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
-title('Seasonal Amp T Effect (\muatm)')
-
+title('Seasonal Temperature Effect on Seawater pCO2 ')
+xlabel(h, 'pCO2 Change (\muatm)','FontSize',14,'FontWeight','bold')
+hold on
+scatterm(sitelat,sitelon,40,'m','filled')
+%%
+%figure 9 in paper 
 figure
 worldmap world
 contourfm(latgrid, longrid, CO2_A_diff','linecolor','none');
 cmocean('balance','pivot',1)
-colorbar
+h = colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
-title('Seasonal Diff Effect (\muatm)')
+title('The Difference Between the Seaonal Temperature and Bio-physical Effects on pCO2')
+xlabel(h,'pCO2 (\muatm)','FontSize',14,'FontWeight','bold')
 hold on
-scatterm(sitelat,sitelon,25,'filled')
+scatterm(sitelat,sitelon,40,'m','filled')
 
