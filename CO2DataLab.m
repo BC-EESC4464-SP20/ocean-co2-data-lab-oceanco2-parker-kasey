@@ -16,6 +16,7 @@ CO2data = ans;
 longrid = unique(CO2data.LON); 
 latgrid = unique(CO2data.LAT);
 monthgrid = unique (CO2data.MONTH);
+longrid(73)= 2.5;
 
 
 
@@ -24,6 +25,7 @@ monthgrid = unique (CO2data.MONTH);
     %lab you will need PCO2_SW (seawater pCO2) and SST (sea surface
     %temperature)
 PCO2_grid = NaN([length(longrid), length(latgrid), length(monthgrid)]);
+
 SST_grid = NaN([length(longrid), length(latgrid), length(monthgrid)]);
 
 %% 2b. Pull out the seawater pCO2 (PCO2_SW) and sea surface temperature (SST)
@@ -44,6 +46,9 @@ for i = 1:length(PCO2)
     PCO2_grid(lo,la,m) = PCO2(i);
 end
 
+PCO2_grid(73,:,:)=PCO2_grid(1,:,:);
+
+
  SST = CO2data.SST;    
 
  for i = 1:length(SST)
@@ -57,7 +62,7 @@ end
     SST_grid(lo,la,m) = SST(i);
 end
  
-    
+SST_grid(73,:,:)=SST_grid(1,:,:);
  
 %% 3a. Make a quick plot to check that your reshaped data looks reasonable
 %Use the imagesc plotting function, which will show a different color for
@@ -83,7 +88,7 @@ colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
 title('January Sea Surface Temperature (^oC)')
 
-
+%%
 
 %Check that you can make a similar type of global map for another month
 %and/or for pCO2 using this approach. Check the documentation and see
