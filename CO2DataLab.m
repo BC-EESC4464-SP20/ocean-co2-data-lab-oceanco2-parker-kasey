@@ -97,10 +97,10 @@ title('January Sea Surface Temperature (^oC)')
 
 figure
 worldmap world
-contourfm(latgrid, longrid, PCO2_grid(:,:,12)','linecolor','none');
+contourfm(latgrid, longrid, PCO2_grid(:,:,1)','linecolor','none');
 colorbar('southoutside')
 geoshow('landareas.shp','FaceColor','black')
-title('December pCO2 of Seawater (\muatm)')
+title('January pCO2 of Seawater (\muatm)')
 
 %% 4. Calculate and plot a global map of annual mean pCO2
 %<--
