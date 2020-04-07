@@ -239,7 +239,7 @@ for i = 1:length(longrid)
     for j = 1:length(latgrid)
         CO2_BP_A(i,j) = max(PCO2_BP(i,j,:)) - min(PCO2_BP(i,j,:));
         CO2_T_A(i,j) = max(PCO2_T(i,j,:)) - min(PCO2_T(i,j,:));
-        CO2_A_diff(i,j) = CO2_T_A(i,j) / CO2_BP_A(i,j);
+        CO2_A_diff(i,j) = CO2_T_A(i,j) - CO2_BP_A(i,j);
     end
 end
 
