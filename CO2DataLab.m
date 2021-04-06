@@ -32,8 +32,7 @@ SST_grid = NaN([length(longrid), length(latgrid), length(monthgrid)]);
 %data and reshape it into your new 3-dimensional arrays
 
 PCO2 = CO2data.PCO2_SW;
-
-
+ SST = CO2data.SST;    
     
 for i = 1:length(PCO2)
     
@@ -44,25 +43,12 @@ for i = 1:length(PCO2)
     m = find(monthgrid == CO2data.MONTH(i));
 
     PCO2_grid(lo,la,m) = PCO2(i);
-end
-
-PCO2_grid(73,:,:)=PCO2_grid(1,:,:);
-
-
- SST = CO2data.SST;    
-
- for i = 1:length(SST)
     
-    lo = find(longrid == CO2data.LON(i)); 
-    
-    la = find(latgrid == CO2data.LAT(i));
-    
-    m = find(monthgrid == CO2data.MONTH(i));
-
     SST_grid(lo,la,m) = SST(i);
 end
- 
-SST_grid(73,:,:)=SST_grid(1,:,:);
+
+%PCO2_grid(73,:,:)=PCO2_grid(1,:,:);
+%SST_grid(73,:,:)=SST_grid(1,:,:);
  
 %% 3a. Make a quick plot to check that your reshaped data looks reasonable
 %Use the imagesc plotting function, which will show a different color for
@@ -70,7 +56,7 @@ SST_grid(73,:,:)=SST_grid(1,:,:);
 %will have to pick one at a time to check - i.e. this example is just for
 %January
 figure 
-imagesc(latgrid,longrid, SST_grid(:,:,1)');
+imagesc(latgrid,longrid,flipud(SST_grid(:,:,1)'));
 colorbar
 
 title('January Sea Surface Temperature (^oC)')
